@@ -1,32 +1,32 @@
-def valid_number?(string)
-  string.to_f.to_s == string || string == "0"
+def valid_number?(input)
+  input.to_f.to_s == input || input == "0"
 end
 
-def format_no_decimal(string)
-  if string.length == 1
-    ("0.0" + string).to_f
-  elsif string.length == 2
-    ("0." + string).to_f
+def format_no_decimal(input)
+  if input.length == 1
+    ("0.0" + input).to_f
+  elsif input.length == 2
+    ("0." + input).to_f
   end
 end
 
-def format_with_decimal(string)
-  if string.index('.') == 1
-    string.slice!('.')
-    ("0.0" + string).to_f
-  elsif string.index('.') == 2
-    string.slice!('.')
-    ("0." + string).to_f
+def format_with_decimal(input)
+  if input.index('.') == 1
+    input.slice!('.')
+    ("0.0" + input).to_f
+  elsif input.index('.') == 2
+    input.slice!('.')
+    ("0." + input).to_f
   end
 end
 
-def formatted_apr(string)
-  if !valid_number?(string)
+def formatted_apr(input)
+  if !valid_number?(input)
     nil
-  elsif !string.include?('.')
-    format_no_decimal(string)
-  elsif string.include?('.')
-    format_with_decimal(string)
+  elsif !input.include?('.')
+    format_no_decimal(input)
+  elsif input.include?('.')
+    format_with_decimal(input)
   end
 end
 
@@ -59,13 +59,12 @@ loop do
   puts "Please enter a valid number (more then 0)"
 end
 
+duration_months   = duration_years * 12
 interest_per_year = loan_amount * apr
-total_interest = interest_per_year * duration_years
-total_due = loan_amount + total_interest
-total_per_year = total_due / duration_years
-duration_mounths = duration_years * 12
-total_per_mounth = total_per_year / 12
+total_interest    = interest_per_year * duration_years
+total_due         = loan_amount + total_interest
+total_per_year    = total_due / duration_years
+total_per_month   = total_per_year / 12
 
-puts "apr: #{apr}"
-puts "Duration in mounths: #{duration_mounths}"
-puts "Payment per mounth: $#{total_per_mounth}"
+puts "Loan duration: #{duration_months} months"
+puts "monthly payments: $#{total_per_month}"
