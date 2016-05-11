@@ -1,3 +1,15 @@
+def prompt(msg)
+  puts "#{msg} >>"
+end
+
+def result(msg)
+  puts "=> #{msg}"
+end
+
+def error(msg)
+  puts "! #{msg}"
+end
+
 def valid_number?(input)
   input.to_f.to_s == input || input.to_i.to_s == input
 end
@@ -33,16 +45,17 @@ end
 puts "Welcome to the Mortgage Calculator!"
 
 loop do
-  puts "How much is the total loan?"
+  prompt "How much is the total loan?"
   loan_amount = ''
   loop do
     loan_amount = gets.to_i
     break unless loan_amount <= 0
 
-    puts "Please enter a valid number (more then 0)"
+    error "Invalid number"
+    prompt "Please enter a valid number (more then 0)"
   end
 
-  puts "Whats the Annual Percentage Rate (APR)? type 5 for 5%, 10.2 for 10.2%"
+  prompt "Whats the Annual Percentage Rate (APR)? type 5 for 5%, 10.2 for 10.2%"
   apr = ''
   loop do
     apr = gets.chomp
@@ -50,16 +63,18 @@ loop do
 
     break unless apr.nil?
 
-    puts "Please enter a number between 0 and 100"
+    error "Invalid number"
+    prompt "Please enter a number between 0 and 100"
   end
 
-  puts "How many years is the loan?"
+  prompt "How many years is the loan?"
   duration_years = ''
   loop do
     duration_years = gets.to_i
     break unless duration_years <= 0
 
-    puts "Please enter a valid number (more then 0)"
+    error "Invalid number"
+    prompt "Please enter a valid number (more then 0)"
   end
 
   puts "Calculating..."
@@ -71,10 +86,10 @@ loop do
   total_per_year    = total_due / duration_years
   total_per_month   = total_per_year / 12
 
-  puts "Loan duration: #{duration_months} months"
-  puts "Monthly payments: $#{total_per_month}"
+  result "Loan duration: #{duration_months} months"
+  result "Monthly payments: $#{total_per_month}"
 
-  puts "Another calculation?(y/n)"
+  prompt "Another calculation? (y/n)"
   answer = ''
 
   loop do
@@ -82,7 +97,8 @@ loop do
     if answer == 'y' || answer == 'n'
       break
     else
-      puts "That's not a valid option."
+      error "Invalid option."
+      prompt "Please enter a valid option (y/n)"
     end
   end
   break if answer == 'n'
