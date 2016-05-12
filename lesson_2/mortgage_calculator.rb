@@ -33,7 +33,6 @@ loop do
 
   prompt "Whats the Annual Percentage Rate (APR)? type 5 for 5%, 10.2 for 10.2%"
   apr = ''
-
   loop do
     apr = gets.chomp
     if valid_apr?(apr)
@@ -71,7 +70,6 @@ loop do
 
   prompt "Another calculation? (y/n)"
   answer = ''
-
   loop do
     answer = gets.chomp.downcase
     if answer == 'y' || answer == 'n'
