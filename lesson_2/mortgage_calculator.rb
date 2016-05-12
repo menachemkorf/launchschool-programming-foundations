@@ -59,11 +59,15 @@ loop do
 
   duration_months = duration_years * 12
 
-  r = apr / 12
-  monthly_payment = (r + r / ((1 + r)**duration_months - 1)) * loan_amount
+  if apr > 0
+    r = apr / 12
+    monthly_payment = (r + r / ((1 + r)**duration_months - 1)) * loan_amount
+  else
+    monthly_payment = loan_amount / duration_months
+  end
 
-  result "Loan duration: #{duration_months} months"
-  result "Monthly payments: $#{monthly_payment}"
+  result "Loan duration: #{duration_months.round} months"
+  result "Monthly payments: $#{format('%.2f', monthly_payment)}"
 
   prompt "Another calculation? (y/n)"
   answer = ''
