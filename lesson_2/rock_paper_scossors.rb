@@ -15,7 +15,7 @@ end
 loop do
   player_choice = ''
   loop do
-    prompt "Choose one: #{VALID_CHICES.join(', ')}"
+    prompt("Choose one: #{VALID_CHICES.join(', ')}")
     player_choice = gets.chomp
     break if VALID_CHICES.include?(player_choice)
     display_error "Invalid choice"
