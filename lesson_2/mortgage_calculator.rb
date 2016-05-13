@@ -15,7 +15,7 @@ def valid_number?(input)
 end
 
 def valid_apr?(input)
-  valid_number?(input) && input.to_i >= 0 && input.to_i < 100
+  valid_number?(input) && input.to_f >= 0 && input.to_f < 100
 end
 
 puts "Welcome to the Mortgage Calculator!"
@@ -40,7 +40,7 @@ loop do
       break
     else
       error "Invalid number"
-      prompt "Please enter a number between 0 and 100"
+      prompt "Please enter a number valid (between 0 and 100)"
     end
   end
 
