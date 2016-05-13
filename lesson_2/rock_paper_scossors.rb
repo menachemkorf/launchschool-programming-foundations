@@ -12,6 +12,12 @@ def display_error(msg)
   puts "! #{msg}"
 end
 
+def won?(player1, player2)
+  (player1 == 'rock' && player2 == 'scissors') ||
+    (player1 == 'paper' && player2 == 'rock') ||
+    (player1 == 'scissors' && player2 == 'paper')
+end
+
 loop do
   player_choice = ''
   loop do
@@ -26,13 +32,9 @@ loop do
   display_result("You chose #{player_choice}")
   display_result("Computer chose #{computer_coice}")
 
-  if  (player_choice == 'rock'      && computer_coice == 'scissors') ||
-      (player_choice == 'scissors'  && computer_coice == 'paper') ||
-      (player_choice == 'paper'     && computer_coice == 'rock')
+  if won?(player_choice, computer_coice)
     display_result "You won!"
-  elsif (computer_coice == 'rock'      && player_choice == 'scissors') ||
-        (computer_coice == 'scissors'  && player_choice == 'paper') ||
-        (computer_coice == 'paper'     && player_choice == 'rock')
+  elsif won?(computer_coice, player_choice)
     display_result "Computer won!"
   else
     display_result "It's a tie!"
