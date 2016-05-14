@@ -1,6 +1,7 @@
 VALID_CHOICES = { 'r' => 'rock',
                   'p' => 'paper',
                   's' => 'scissors' }
+
 def prompt(msg)
   puts "#{msg} >>"
 end
@@ -46,8 +47,7 @@ loop do
 
     computer_coice = VALID_CHOICES.values.sample
 
-    display_result("You chose #{player_choice}")
-    display_result("Computer chose #{computer_coice}")
+    display_result("You chose '#{player_choice}', computer chose '#{computer_coice}'.")
 
     if won?(player_choice, computer_coice)
       points[:player] += 1
@@ -58,8 +58,7 @@ loop do
     else
       display_result "It's a tie!"
     end
-    display_result("You have #{points[:player]} points")
-    display_result("Computer has #{points[:computer]} points")
+    display_result("You have #{points[:player]} points, computer has #{points[:computer]} points")
 
     if points[:player] == 5
       puts "You won the game!"
