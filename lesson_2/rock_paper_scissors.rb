@@ -1,5 +1,6 @@
-VALID_CHICES = %w(rock paper scissors)
-
+VALID_CHICES_H = {  'r' => 'rock',
+                    'p' => 'paper',
+                    's' => 'scissors' }
 def prompt(msg)
   puts "#{msg} >>"
 end
@@ -18,16 +19,29 @@ def won?(player1, player2)
     (player1 == 'scissors' && player2 == 'paper')
 end
 
+choose_prompt = <<-MSG
+Choose one:
+  r. rock
+  p. paper
+  s. scissors
+MSG
+
 loop do
   player_choice = ''
   loop do
-    prompt("Choose one: #{VALID_CHICES.join(', ')}")
-    player_choice = gets.chomp
-    break if VALID_CHICES.include?(player_choice)
-    display_error "Invalid choice"
+    prompt choose_prompt
+    player_choice = gets.chomp.downcase
+    if VALID_CHICES_H.flatten.include?(player_choice)
+      VALID_CHICES_H.each do |k, v|
+        player_choice = v if player_choice == k
+      end
+      break
+    else
+      display_error "Invalid choice"
+    end
   end
 
-  computer_coice = VALID_CHICES.sample
+  computer_coice = VALID_CHICES_H.values.sample
 
   display_result("You chose #{player_choice}")
   display_result("Computer chose #{computer_coice}")
@@ -40,7 +54,7 @@ loop do
     display_result "It's a tie!"
   end
 
-  prompt "Do you want to plat again? (y/n)"
+  prompt "Do you want to play again? (y/n)"
   answer = ''
   loop do
     answer = gets.chomp.downcase
