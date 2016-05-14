@@ -1,7 +1,16 @@
 VALID_CHOICES = { 'r' => 'rock',
                   'p' => 'paper',
-                  's' => 'scissors' }
+                  's' => 'scissors',
+                  'l' => 'lizard',
+                  'sp' => 'spock' }
+
+WINNING_COMBOS = {  'rock'      => %w(scissors lizard),
+                    'paper'     => %w(rock spock),
+                    'scissors'  => %w(paper lizard),
+                    'lizard'    => %w(paper spock),
+                    'spock'     => %w(rock scissors) }
 POINTS_TO_WIN = 5
+
 def prompt(msg)
   puts "#{msg} >>"
 end
@@ -15,17 +24,8 @@ def display_error(msg)
 end
 
 def won?(player1, player2)
-  (player1 == 'rock' && player2 == 'scissors') ||
-    (player1 == 'paper' && player2 == 'rock') ||
-    (player1 == 'scissors' && player2 == 'paper')
+  WINNING_COMBOS[player1].include?(player2)
 end
-
-choose_prompt = <<-MSG
-Choose one:
-  r. rock
-  p. paper
-  s. scissors
-MSG
 
 loop do
   points = { player: 0, computer: 0 }
@@ -33,7 +33,10 @@ loop do
   loop do
     player_choice = ''
     loop do
-      prompt choose_prompt
+      puts "Choose one:"
+      VALID_CHOICES.each do |k, v|
+        puts "#{k}. #{v}"
+      end
       player_choice = gets.chomp.downcase
       if VALID_CHOICES.flatten.include?(player_choice)
         VALID_CHOICES.each do |k, v|
@@ -82,3 +85,4 @@ loop do
   end
   break if answer == 'n'
 end
+puts "Thank you for playing. Good bye!"
