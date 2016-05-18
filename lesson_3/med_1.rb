@@ -52,3 +52,66 @@ end
 factors(6)
 
 # question 6
+
+def rolling_buffer1(buffer, max_buffer_size, new_element)
+  buffer << new_element
+  buffer.shift if buffer.size >= max_buffer_size
+  buffer
+end # => mutates caller
+
+def rolling_buffer2(input_array, max_buffer_size, new_element)
+  buffer = input_array + [new_element]
+  buffer.shift if buffer.size >= max_buffer_size
+  buffer
+end # => does not mutate caller
+
+max_buffer_size = 5
+buffer = %w(Mike Paul Abe Neil Ryan)
+
+rolling_buffer2(buffer, max_buffer_size, "Alex")
+# p buffer
+rolling_buffer1(buffer, max_buffer_size, "Max")
+# p buffer
+
+# question 7
+
+LIMIT = 15
+
+def fib(first_num, second_num)
+  while second_num < LIMIT
+    sum = first_num + second_num
+    first_num = second_num
+    second_num = sum
+  end
+  sum
+end
+
+result = fib(0, 1)
+# puts "result is #{result}"
+
+# question 8
+
+words = "the quick brown fox jumped over the lazy dog"
+words = words.split.map { |word| word.capitalize }.join(' ')
+
+# question 9
+
+munsters = {
+  "Herman" => { "age" => 32, "gender" => "male" },
+  "Lily" => { "age" => 30, "gender" => "female" },
+  "Grandpa" => { "age" => 402, "gender" => "male" },
+  "Eddie" => { "age" => 10, "gender" => "male" },
+  "Marilyn" => { "age" => 23, "gender" => "female"}
+}
+
+munsters.each do |key, value|
+  case value["age"]
+  when 0..17
+    value["age_group"] = "kid"
+  when 18..64
+    value["age_group"] = "adult"
+  else
+    value["age_group"] = "senior"
+  end
+end
+p munsters
