@@ -2,7 +2,7 @@
 statement = "The Flintstones Rock!"
 
 10.times do |num|
-  # puts (" " * num) + statement
+  puts (" " * num) + statement
 end
 
 # question 2
@@ -14,25 +14,27 @@ letters.each do |l|
   result[l] = statement.count(l) if statement.count(l) > 0
 end
 
+p result
+
 # question 3
 
-# puts "the value of 40 + 2 is " + (40 + 2) => error
+# "the value of 40 + 2 is " + (40 + 2) => error
 
-"the value of 40 + 2 is " + (40 + 2).to_s
-"the value of 40 + 2 is #{40 + 2}"
+puts "the value of 40 + 2 is " + (40 + 2).to_s
+puts "the value of 40 + 2 is #{40 + 2}"
 
 # question 4
 
 numbers = [1, 2, 3, 4]
 numbers.each do |number|
-  # p number
+  p number
   numbers.shift(1)
 end
 # => 1, 3
 
 numbers = [1, 2, 3, 4]
 numbers.each do |number|
-  # p number
+  p number
   numbers.pop(1)
 end
 # => 1, 2
@@ -69,9 +71,9 @@ max_buffer_size = 5
 buffer = %w(Mike Paul Abe Neil Ryan)
 
 rolling_buffer2(buffer, max_buffer_size, "Alex")
-# p buffer
+p buffer
 rolling_buffer1(buffer, max_buffer_size, "Max")
-# p buffer
+p buffer
 
 # question 7
 
@@ -87,7 +89,7 @@ def fib(first_num, second_num)
 end
 
 result = fib(0, 1)
-# puts "result is #{result}"
+puts "result is #{result}"
 
 # question 8
 
