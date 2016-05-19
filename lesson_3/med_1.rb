@@ -1,4 +1,5 @@
 # question 1
+
 statement = "The Flintstones Rock!"
 
 10.times do |num|
