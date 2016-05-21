@@ -3,9 +3,9 @@ require 'pry'
 INITIAL_MARKER = " "
 PLAYER_MARKER = "X"
 COMPUTER_MARKER = "O"
-WINNING_LINES =  [[1, 2, 3], [4, 5, 6], [7, 8, 9]] +
-                  [[1, 4, 7], [2, 5, 8], [3, 6, 9]] +
-                  [[1, 5, 9], [3, 5, 7]]
+WINNING_LINES = [[1, 2, 3], [4, 5, 6], [7, 8, 9]] +
+                [[1, 4, 7], [2, 5, 8], [3, 6, 9]] +
+                [[1, 5, 9], [3, 5, 7]]
 
 def prompt(msg)
   puts "=> #{msg}"
@@ -77,20 +77,27 @@ def board_full?(brd)
   empty_squares(brd).empty?
 end
 
-board = initialize_board
-#display_board(board)
-
 loop do
+  board = initialize_board
+
+  loop do
+    display_board(board)
+    player_places_piece!(board)
+    break if someome_won?(board) || board_full?(board)
+    computer_places_piece!(board)
+    break if someome_won?(board) || board_full?(board)
+  end
+
   display_board(board)
-  player_places_piece!(board)
-  break if someome_won?(board) || board_full?(board)
-  computer_places_piece!(board)
-  break if someome_won?(board) || board_full?(board)
+  if someome_won?(board)
+    prompt("#{detect_winner(board)} won!")
+  else
+    prompt("It's a tie!")
+  end
+
+  prompt("Play again? (y/n)")
+  answer = gets.chomp
+  break unless answer.downcase.start_with?('y')
 end
 
-display_board(board)
-if someome_won?(board)
-  prompt("#{detect_winner(board)} won!")
-else
-  prompt("It's a tie!")
-end
+prompt("Thank you for playng Tic Tac Toe! Good bye!")
