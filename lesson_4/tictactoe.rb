@@ -44,7 +44,7 @@ end
 def player_places_piece!(brd)
   square = ''
   loop do
-    prompt("Please choose a square (#{empty_squares(brd).join(', ')}).")
+    prompt "Please choose a square (#{joinor(empty_squares(brd))})."
     square = gets.chomp.to_i
     break if empty_squares(brd).include?(square)
     prompt("Sorry, that's not a valid choice.")
@@ -74,6 +74,18 @@ end
 
 def board_full?(brd)
   empty_squares(brd).empty?
+end
+
+def joinor(arr, delimiter=', ', word='or')
+  if arr.length > 1
+    arr[-1] = "#{word} #{arr.last}"
+  end
+  # if arr.length > 2
+  #   arr.join(delimiter)
+  # else
+  #   arr.join(' ')
+  # end
+  arr.length > 2 ? arr.join(delimiter) : arr.join(' ')
 end
 
 loop do
