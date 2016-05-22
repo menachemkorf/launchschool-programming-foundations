@@ -10,7 +10,7 @@ WINNING_COMBOS = {  'rock'      => %w(scissors lizard),
                     'lizard'    => %w(paper spock),
                     'spock'     => %w(rock scissors) }
 POINTS_TO_WIN = 5
-VALID_ANSWEWRS = %w(y n)
+VALID_ANSWERS = %w(y n)
 
 def display_msg(msg, format = '')
   if format == :prompt
@@ -76,7 +76,7 @@ def play_again?
   answer = ''
   loop do
     answer = gets.chomp.downcase
-    break if VALID_ANSWEWRS.include(amswer)
+    break if VALID_ANSWERS.include?(answer)
     display_msg("Invalid option.", :error)
     display_msg("Please enter a valid option (y/n)", :prompt)
   end
