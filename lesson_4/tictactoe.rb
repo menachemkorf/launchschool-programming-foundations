@@ -6,6 +6,7 @@ COMPUTER_MARKER = "O".freeze
 WINNING_LINES = [[1, 2, 3], [4, 5, 6], [7, 8, 9]] +
                 [[1, 4, 7], [2, 5, 8], [3, 6, 9]] +
                 [[1, 5, 9], [3, 5, 7]]
+VALID_ANSWERS = %w(y n)
 
 def prompt(msg)
   puts "=> #{msg}"
@@ -83,6 +84,17 @@ def joinor(arr, delimiter=', ', word='or')
   arr.length > 2 ? arr.join(delimiter) : arr.join(' ')
 end
 
+def play_again?
+  answer = ''
+  loop do
+    prompt("Do you want to play again? (y/n)")
+    answer = gets.chomp.downcase
+    break if VALID_ANSWERS.include?(answer)
+    prompt("Invalid option.")
+  end
+  true if answer == 'y'
+end
+
 loop do
   board = initialize_board
 
@@ -101,9 +113,10 @@ loop do
     prompt("It's a tie!")
   end
 
-  prompt("Play again? (y/n)")
-  answer = gets.chomp
-  break unless answer.downcase.start_with?('y')
+  # prompt("Play again? (y/n)")
+  # answer = gets.chomp
+  # break unless answer.downcase.start_with?('y')
+  break unless play_again?
 end
 
 prompt("Thank you for playng Tic Tac Toe! Good bye!")
