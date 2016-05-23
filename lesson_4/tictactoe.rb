@@ -45,6 +45,30 @@ def empty_squares(brd)
   brd.keys.select { |sqr| brd[sqr] == INITIAL_MARKER }
 end
 
+def computer_winning_square(brd)
+  square = nil
+  WINNING_LINES.each do |line|
+    next unless brd.values_at(*line).count(COMPUTER_MARKER) == 2 &&
+                brd.values_at(*line).count(INITIAL_MARKER) == 1
+    square = brd.select do |k, v|
+      line.include?(k) && v == INITIAL_MARKER
+    end.keys[0]
+  end
+  square
+end
+
+def player_winning_square(brd)
+  square = nil
+  WINNING_LINES.each do |line|
+    next unless brd.values_at(*line).count(PLAYER_MARKER) == 2 &&
+                brd.values_at(*line).count(INITIAL_MARKER) == 1
+    square = brd.select do |k, v|
+      line.include?(k) && v == INITIAL_MARKER
+    end.keys[0]
+  end
+  square
+end
+
 def player_places_piece!(brd)
   square = ''
   loop do
@@ -57,7 +81,15 @@ def player_places_piece!(brd)
 end
 
 def computer_places_piece!(brd)
-  square = empty_squares(brd).sample
+  square = if computer_winning_square(brd)
+             computer_winning_square(brd)
+           elsif player_winning_square(brd)
+             player_winning_square(brd)
+           elsif empty_squares(brd).include?(5)
+             5
+           else
+             empty_squares(brd).sample
+           end
   brd[square] = COMPUTER_MARKER
 end
 
@@ -84,7 +116,7 @@ def display_results(brd, pnts, result)
   display_board(brd, pnts)
   prompt("#{detect_round_winner(brd)} won!") if result == "won"
   prompt("It's a tie!") if result == "tie"
-  prompt("Press any key to continue.")
+  prompt("Press enter to continue.")
   gets
 end
 
@@ -108,7 +140,6 @@ end
 
 loop do
   points = { "player" => 0, "computer" => 0 }
-  board = ''
   loop do
     board = initialize_board
     loop do
@@ -126,7 +157,7 @@ loop do
       display_results(board, points, "tie")
     end
 
-    break if points.key(POINTS_TO_WIN)
+    break if points.value?(POINTS_TO_WIN)
   end
 
   prompt("#{points.key(POINTS_TO_WIN).capitalize} won the game!")
