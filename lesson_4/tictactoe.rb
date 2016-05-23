@@ -45,28 +45,24 @@ def empty_squares(brd)
   brd.keys.select { |sqr| brd[sqr] == INITIAL_MARKER }
 end
 
-def computer_winning_square(brd)
+def winning_square(brd, player)
   square = nil
   WINNING_LINES.each do |line|
-    next unless brd.values_at(*line).count(COMPUTER_MARKER) == 2 &&
+    next unless brd.values_at(*line).count(player) == 2 &&
                 brd.values_at(*line).count(INITIAL_MARKER) == 1
-    square = brd.select do |k, v|
-      line.include?(k) && v == INITIAL_MARKER
+    square = brd.select do |sqr, marker|
+      line.include?(sqr) && marker == INITIAL_MARKER
     end.keys[0]
   end
   square
 end
 
+def computer_winning_square(brd)
+  winning_square(brd, COMPUTER_MARKER)
+end
+
 def player_winning_square(brd)
-  square = nil
-  WINNING_LINES.each do |line|
-    next unless brd.values_at(*line).count(PLAYER_MARKER) == 2 &&
-                brd.values_at(*line).count(INITIAL_MARKER) == 1
-    square = brd.select do |k, v|
-      line.include?(k) && v == INITIAL_MARKER
-    end.keys[0]
-  end
-  square
+  winning_square(brd, PLAYER_MARKER)
 end
 
 def player_places_piece!(brd)
