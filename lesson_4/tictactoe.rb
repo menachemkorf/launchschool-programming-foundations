@@ -1,5 +1,3 @@
-require 'pry'
-
 INITIAL_MARKER = " ".freeze
 PLAYER_MARKER = "X".freeze
 COMPUTER_MARKER = "O".freeze
@@ -13,7 +11,7 @@ def prompt(msg)
   puts "=> #{msg}"
 end
 
-# rubocop:disable Metrics/AbcSize
+# rubocop:disable Metrics/AbcSize, Metrics/MethodLength
 def display_board(brd, pnts)
   system "clear"
   puts "You're #{PLAYER_MARKER}. Computer is #{COMPUTER_MARKER}."
@@ -33,7 +31,7 @@ def display_board(brd, pnts)
   puts "     |     |"
   puts ""
 end
-# rubocop:enable Metrics/AbcSize
+# rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
 def initialize_board
   board = {}
@@ -48,11 +46,11 @@ end
 def winning_square(brd, player)
   square = nil
   WINNING_LINES.each do |line|
-    next unless brd.values_at(*line).count(player) == 2 &&
-                brd.values_at(*line).count(INITIAL_MARKER) == 1
+    next unless brd.values_at(*line).count(player) == 2
+
     square = brd.select do |sqr, marker|
       line.include?(sqr) && marker == INITIAL_MARKER
-    end.keys[0]
+    end.keys.first
   end
   square
 end
@@ -87,6 +85,15 @@ def computer_places_piece!(brd)
              empty_squares(brd).sample
            end
   brd[square] = COMPUTER_MARKER
+end
+
+def place_piece!(brd, player)
+  player_places_piece!(brd) if player == 'player'
+  computer_places_piece!(brd) if player == 'computer'
+end
+
+def alternate_player(player)
+  player == 'player' ? 'computer' : 'player'
 end
 
 def detect_round_winner(brd)
@@ -138,12 +145,13 @@ loop do
   points = { "player" => 0, "computer" => 0 }
   loop do
     board = initialize_board
+    current_player = 'player'
+
     loop do
       display_board(board, points)
-      player_places_piece!(board)
+      place_piece!(board, current_player)
       break if someome_won_round?(board) || board_full?(board)
-      computer_places_piece!(board)
-      break if someome_won_round?(board) || board_full?(board)
+      current_player = alternate_player(current_player)
     end
 
     if someome_won_round?(board)
