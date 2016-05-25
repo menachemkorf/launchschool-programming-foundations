@@ -2,17 +2,29 @@ require 'pry'
 
 SUITS = { "H" => "Hearts",
           "S" => "Spades",
-          "D" => "Diamond",
+          "D" => "Diamonds",
           "C" => "Clubs" }.freeze
+VALUES = { "J" => "Jack",
+           "Q" => "Queen",
+           "K" => "King",
+           "A" => "Ace" }.freeze
 
 def prompt(msg)
   puts "=> #{msg}"
 end
 
+def format_value(card)
+  if card.to_i == 0
+    VALUES[card]
+  else
+    card
+  end
+end
+
 def display_cards(cards)
   msg = []
   cards.each do |card|
-    msg.push("'#{card[0]} of #{SUITS[card[1]]}'")
+    msg.push("'#{format_value(card[0])} of #{SUITS[card[1]]}'")
   end
   msg.join(', ')
 end
@@ -100,7 +112,7 @@ loop do
   loop do
     prompt("hit or stay?")
     answer = gets.chomp.downcase
-    break if answer == 'stay' # || busted?(player_cards)
+    break if answer == 'stay'
     deal(deck, player_cards)
 
     display_hands(player_cards, dealer_cards)
