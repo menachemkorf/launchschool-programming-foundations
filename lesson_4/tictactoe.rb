@@ -52,6 +52,7 @@ def winning_square(brd, player)
     square = brd.select do |sqr, marker|
       line.include?(sqr) && marker == INITIAL_MARKER
     end.keys.first
+    return square
   end
   square
 end
@@ -76,15 +77,11 @@ def player_places_piece!(brd)
 end
 
 def computer_places_piece!(brd)
-  square = if computer_winning_square(brd)
-             computer_winning_square(brd)
-           elsif player_winning_square(brd)
-             player_winning_square(brd)
-           elsif empty_squares(brd).include?(5)
-             5
-           else
-             empty_squares(brd).sample
-           end
+  square =  computer_winning_square(brd) ||
+            player_winning_square(brd) ||
+            empty_squares(brd).select { |n| n == 5 }.first ||
+            empty_squares(brd).sample
+
   brd[square] = COMPUTER_MARKER
 end
 
