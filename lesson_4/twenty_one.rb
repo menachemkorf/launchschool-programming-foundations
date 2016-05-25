@@ -1,17 +1,27 @@
 require 'pry'
 
-SUITS = { "H" => "Heart",
-          "S" => "Spade",
-          "D" => "Dimond",
-          "C" => "Club" }
+SUITS = { "H" => "Hearts",
+          "S" => "Spades",
+          "D" => "Diamond",
+          "C" => "Clubs" }.freeze
 
 def prompt(msg)
   puts "=> #{msg}"
 end
 
+def display_cards(cards)
+  msg = []
+  cards.each do |card|
+    msg.push("'#{card[0]} of #{SUITS[card[1]]}'")
+  end
+  msg.join(', ')
+end
+
 def display_hands(player, dealer)
-  puts "You have #{player.length} cards:   #{player}"
-  puts "Dealer has #{dealer.length} cards: #{dealer[0]}"
+  system "clear"
+  prompt "You have #{player.length} cards: #{display_cards(player)}"
+  prompt "Dealer has #{dealer.length} cards: #{display_cards([dealer.first])}"
+  puts ''
 end
 
 def total(cards)
@@ -19,16 +29,16 @@ def total(cards)
   sum = 0
 
   values.each do |value|
-    if value == "A"
-      sum += 11
-    elsif value.to_i == 0
-      sum += 10
-    else
-      sum += value.to_i
-    end
+    sum += if value == "A"
+             11
+           elsif value.to_i == 0
+             10
+           else
+             value.to_i
+           end
   end
 
-  values.select { |value| value == "A"}.count.times do
+  values.select { |value| value == "A" }.count.times do
     sum -= 10 if sum > 21
   end
 
@@ -60,7 +70,7 @@ def initialize_hands(deck)
   2.times { deal(deck, player_cards) }
   2.times { deal(deck, dealer_cards) }
 
-  return player_cards, dealer_cards
+  [player_cards, dealer_cards]
 end
 
 def deal(deck, player)
@@ -68,7 +78,7 @@ def deal(deck, player)
 end
 
 def busted?(cards)
-  total(cards) > 21 ? true : false
+  total(cards) > 21
 end
 
 def play_again?
@@ -79,7 +89,7 @@ def play_again?
     break if %(y n).include?(answer)
     prompt("Invalid option.")
   end
-  true if answer == 'y'
+  answer == 'y'
 end
 
 loop do
@@ -96,7 +106,6 @@ loop do
     display_hands(player_cards, dealer_cards)
     break if busted?(player_cards)
   end
-
 
   break unless play_again?
 end
