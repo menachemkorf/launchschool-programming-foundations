@@ -46,7 +46,8 @@ end
 def winning_square(brd, player)
   square = nil
   WINNING_LINES.each do |line|
-    next unless brd.values_at(*line).count(player) == 2
+    next unless brd.values_at(*line).count(player) == 2 &&
+                brd.values_at(*line).count(INITIAL_MARKER) == 1
 
     square = brd.select do |sqr, marker|
       line.include?(sqr) && marker == INITIAL_MARKER
