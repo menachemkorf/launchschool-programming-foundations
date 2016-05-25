@@ -139,7 +139,7 @@ def play_again?
     break if VALID_ANSWERS.include?(answer)
     prompt("Invalid option.")
   end
-  true if answer == 'y'
+  answer == 'y'
 end
 
 loop do
