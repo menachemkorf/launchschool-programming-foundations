@@ -98,7 +98,7 @@ def play_again?
   loop do
     prompt("Do you want to play again? (y/n)")
     answer = gets.chomp.downcase
-    break if %(y n).include?(answer)
+    break if %w(y n).include?(answer)
     prompt("Invalid option.")
   end
   answer == 'y'
@@ -110,9 +110,15 @@ loop do
   display_hands(player_cards, dealer_cards)
 
   loop do
-    prompt("hit or stay?")
-    answer = gets.chomp.downcase
-    break if answer == 'stay'
+    player_choice = ''
+    loop do
+      prompt("hit or stay?")
+      player_choice = gets.chomp.downcase
+      break if %w(hit stay).include?(player_choice)
+      prompt("Invalid option.")
+    end
+
+    break if player_choice == 'stay'
     deal(deck, player_cards)
 
     display_hands(player_cards, dealer_cards)
