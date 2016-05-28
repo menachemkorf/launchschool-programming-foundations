@@ -43,20 +43,18 @@ def empty_squares(brd)
   brd.keys.select { |sqr| brd[sqr] == INITIAL_MARKER }
 end
 
-def hash_and_array_include(hsh, arr, item)
-  hsh.values_at(*arr).count(item)
+def count_markers_in_line(brd, line, marker)
+  brd.values_at(*line).count(marker)
 end
 
 def winning_square(brd, player)
   square = nil
   WINNING_LINES.each do |line|
-    next unless hash_and_array_include(brd, line, player) == 2 &&
-                hash_and_array_include(brd, line, INITIAL_MARKER)
+    next unless count_markers_in_line(brd, line, player) == 2 &&
+                count_markers_in_line(brd, line, INITIAL_MARKER)
 
-    square = brd.select do |sqr, marker|
-      line.include?(sqr) && marker == INITIAL_MARKER
-    end.keys.first
-    return square
+    square = line.find { |sqr| brd[sqr] == INITIAL_MARKER }
+    break if square
   end
   square
 end
@@ -100,9 +98,9 @@ end
 
 def detect_round_winner(brd)
   WINNING_LINES.each do |line|
-    if hash_and_array_include(brd, line, PLAYER_MARKER) == 3
+    if count_markers_in_line(brd, line, PLAYER_MARKER) == 3
       return 'Player'
-    elsif hash_and_array_include(brd, line, COMPUTER_MARKER) == 3
+    elsif count_markers_in_line(brd, line, COMPUTER_MARKER) == 3
       return 'Computer'
     end
   end
