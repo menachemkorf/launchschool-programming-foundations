@@ -89,6 +89,17 @@ def deal(deck, player)
   player.push(deck.delete(deck.sample))
 end
 
+def hit_or_stay
+  player_choice = ''
+  loop do
+    prompt("hit or stay?")
+    player_choice = gets.chomp.downcase
+    break if %w(hit stay).include?(player_choice)
+    prompt("Invalid option.")
+  end
+  player_choice
+end
+
 def busted?(cards)
   total(cards) > 21
 end
@@ -108,15 +119,9 @@ loop do
   deck = initialize_deck
   player_cards, dealer_cards = initialize_hands(deck)
   display_hands(player_cards, dealer_cards)
-
+  player_choice = ''
   loop do
-    player_choice = ''
-    loop do
-      prompt("hit or stay?")
-      player_choice = gets.chomp.downcase
-      break if %w(hit stay).include?(player_choice)
-      prompt("Invalid option.")
-    end
+    player_choice = hit_or_stay
 
     break if player_choice == 'stay'
     deal(deck, player_cards)
@@ -125,5 +130,16 @@ loop do
     break if busted?(player_cards)
   end
 
+  if player_choice == 'stay'
+    loop do
+      deal(deck, dealer_cards)
+      puts total(dealer_cards)
+      display_hands(player_cards, dealer_cards)
+      break if total(dealer_cards) >= 17
+    end
+  end
+
+  prompt("Your sum is #{total(player_cards)}")
+  prompt("The dealer's sum is #{total(dealer_cards)}")
   break unless play_again?
 end
