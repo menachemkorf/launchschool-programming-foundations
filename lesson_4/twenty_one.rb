@@ -1,16 +1,12 @@
-require 'pry'
+VALUES = { 'J' => 'Jack',
+           'Q' => 'Queen',
+           'K' => 'King',
+           'A' => 'Ace' }.freeze
 
-SUITS = ['H', 'D', 'S', 'C'].freeze
-VALUES = ['2', '3', '4', '5', '6', '7', '8', '9', '10',
-          'J', 'Q', 'K', 'A'].freeze
-FULL_VALUES = { 'J' => 'Jack',
-                'Q' => 'Queen',
-                'K' => 'King',
-                'A' => 'Ace' }.freeze
-FULL_SUITS = { 'H' => 'Hearts',
-               'D' => 'Diamonds',
-               'S' => 'Spades',
-               'C' => 'Clubs' }.freeze
+SUITS = { 'H' => 'Hearts',
+          'D' => 'Diamonds',
+          'S' => 'Spades',
+          'C' => 'Clubs' }.freeze
 BUST = 21
 DEALER_STAY = 17
 
@@ -19,7 +15,7 @@ def prompt(msg)
 end
 
 def initialize_deck
-  VALUES.product(SUITS).shuffle
+  VALUES.keys.product(SUITS.keys).shuffle
 end
 
 def initialize_hands(deck)
@@ -40,11 +36,11 @@ def format_cards(cards)
     suit = card[1]
 
     full_value = if value.to_i == 0
-                   FULL_VALUES[value]
+                   VALUES[value]
                  else
                    value
                  end
-    full_suit = FULL_SUITS[suit]
+    full_suit = SUITS[suit]
     formatted_cards.push("'#{full_value} of #{full_suit}'")
   end
   formatted_cards.join(', ')
@@ -73,6 +69,7 @@ def total(cards)
   values = cards.map { |card| card[0] }
   sum = 0
 
+  # calculate sum
   values.each do |value|
     sum += if value == "A"
              11
@@ -83,6 +80,7 @@ def total(cards)
            end
   end
 
+  # modify value of 'A' if total more than 21
   values.select { |value| value == "A" }.count.times do
     sum -= 10 if sum > BUST
   end
