@@ -3,6 +3,8 @@ require 'pry'
 SUITS = ['H', 'D', 'S', 'C'].freeze
 VALUES = ['2', '3', '4', '5', '6', '7', '8', '9', '10',
           'J', 'Q', 'K', 'A'].freeze
+BUST = 21
+DEALER_STAY = 17
 
 def prompt(msg)
   puts "=> #{msg}"
@@ -52,7 +54,7 @@ def total(cards)
   end
 
   values.select { |value| value == "A" }.count.times do
-    sum -= 10 if sum > 21
+    sum -= 10 if sum > BUST
   end
 
   sum
@@ -73,14 +75,11 @@ def hit_or_stay
   player_choice
 end
 
-def busted?(cards)
-  total(cards) > 21
+def busted?(ttl)
+  ttl > BUST
 end
 
-def detect_result(player_cards, dealer_cards)
-  player_total = total(player_cards)
-  dealer_total = total(dealer_cards)
-
+def detect_result(player_total, dealer_total)
   if player_total > dealer_total
     :player
   elsif dealer_total > player_total
@@ -123,38 +122,42 @@ loop do
 
   # player turn
   player_choice = nil
+  player_total = nil
   loop do
     player_choice = hit_or_stay
     if player_choice == 'h'
       deal(deck, player_cards)
       display_partial_hands(player_cards, dealer_cards)
     end
-    break if player_choice == 's' || busted?(player_cards)
+    player_total = total(player_cards)
+    break if player_choice == 's' || busted?(player_total)
   end
 
-  if busted?(player_cards)
+  if busted?(player_total)
     display_result(:player_busted)
     play_again? ? next : break
   else
-    prompt "You stayed at #{total(player_cards)}"
+    prompt "You stayed at #{player_total}"
   end
 
   # dealer turn
+  dealer_total = nil
   loop do
-    break if total(dealer_cards) >= 17
+    dealer_total = total(dealer_cards)
+    break if dealer_total >= DEALER_STAY
     prompt "Dealer hits"
     deal(deck, dealer_cards)
   end
   display_full_hands(player_cards, dealer_cards)
 
-  if busted?(dealer_cards)
+  if busted?(dealer_total)
     display_result(:dealer_busted)
     play_again? ? next : break
   else
-    prompt "Dealer stayed at #{total(dealer_cards)}"
+    prompt "Dealer stayed at #{dealer_total}"
   end
 
-  result = detect_result(player_cards, dealer_cards)
+  result = detect_result(player_total, dealer_total)
   display_result(result)
 
   break unless play_again?
