@@ -3,6 +3,14 @@ require 'pry'
 SUITS = ['H', 'D', 'S', 'C'].freeze
 VALUES = ['2', '3', '4', '5', '6', '7', '8', '9', '10',
           'J', 'Q', 'K', 'A'].freeze
+FULL_VALUES = { 'J' => 'Jack',
+                'Q' => 'Queen',
+                'K' => 'King',
+                'A' => 'Ace' }.freeze
+FULL_SUITS = { 'H' => 'Hearts',
+               'D' => 'Diamonds',
+               'S' => 'Spades',
+               'C' => 'Clubs' }.freeze
 BUST = 21
 DEALER_STAY = 17
 
@@ -24,18 +32,40 @@ def initialize_hands(deck)
   [player_cards, dealer_cards]
 end
 
+def format_cards(cards)
+  formatted_cards = []
+
+  cards.each do |card|
+    value = card[0]
+    suit = card[1]
+
+    full_value = if value.to_i == 0
+                   FULL_VALUES[value]
+                 else
+                   value
+                 end
+    full_suit = FULL_SUITS[suit]
+    formatted_cards.push("'#{full_value} of #{full_suit}'")
+  end
+  formatted_cards.join(', ')
+end
+
 def display_partial_hands(player_cards, dealer_cards)
   system 'clear'
   prompt "Welcome to Twenty-One!"
-  prompt "Player has #{player_cards.length} cards: #{player_cards}, "\
+  prompt "Player has #{player_cards.length} "\
+        "cards: #{format_cards(player_cards)}, "\
         "for a total of #{total(player_cards)}"
-  prompt "Dealer has #{dealer_cards.length} cards: #{dealer_cards[0]} and ?"
+  prompt "Dealer has #{dealer_cards.length} "\
+        "cards: #{format_cards([dealer_cards[0]])} and ?"
 end
 
 def display_full_hands(player_cards, dealer_cards)
-  prompt "Player has #{player_cards.length} cards: #{player_cards}, "\
+  prompt "Player has #{player_cards.length} "\
+        "cards: #{format_cards(player_cards)}, "\
         "for a total of #{total(player_cards)}"
-  prompt "Dealer has #{dealer_cards.length} cards: #{dealer_cards}, "\
+  prompt "Dealer has #{dealer_cards.length} "\
+        "cards: #{format_cards(dealer_cards)}, "\
         "for a total of #{total(dealer_cards)}"
 end
 
