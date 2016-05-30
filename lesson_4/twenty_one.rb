@@ -24,6 +24,11 @@ def initialize_hands(deck)
   [player_cards, dealer_cards]
 end
 
+def display_greeting
+  system('clear') || system('cls')
+  prompt "Welcome to Twenty-One!"
+end
+
 def format_cards(cards)
   formatted_cards = []
 
@@ -35,23 +40,25 @@ def format_cards(cards)
   formatted_cards.join(', ')
 end
 
-def display_partial_hands(player_cards, dealer_cards)
-  system 'clear'
-  prompt "Welcome to Twenty-One!"
-  prompt "Player has #{player_cards.length} "\
-        "cards: #{format_cards(player_cards)}, "\
-        "for a total of #{total(player_cards)}"
-  prompt "Dealer has #{dealer_cards.length} "\
-        "cards: #{format_cards([dealer_cards[0]])} and ?"
+def display_hand(name, cards, full = true)
+  if full
+    visible_cards = cards
+    total = " for a total of #{total(cards)}"
+  else
+    visible_cards = [cards[0]]
+    total = " and ?"
+  end
+  msg = "#{name} has #{cards.length} cards: "
+  msg += format_cards(visible_cards)
+  msg += total
+  puts msg
 end
 
-def display_full_hands(player_cards, dealer_cards)
-  prompt "Player has #{player_cards.length} "\
-        "cards: #{format_cards(player_cards)}, "\
-        "for a total of #{total(player_cards)}"
-  prompt "Dealer has #{dealer_cards.length} "\
-        "cards: #{format_cards(dealer_cards)}, "\
-        "for a total of #{total(dealer_cards)}"
+def display_hands(player_cards, dealer_cards, player_turn = false)
+  full = !player_turn
+  display_greeting if player_turn
+  display_hand('Player', player_cards)
+  display_hand('Dealer', dealer_cards, full)
 end
 
 def total(cards)
@@ -77,8 +84,19 @@ def total(cards)
   sum
 end
 
-def deal(deck, player)
-  player.push(deck.pop)
+def deal(deck, player, num=1)
+  num.times do
+    player.push(deck.pop)
+  end
+end
+
+def choose(question, valid_answers)
+  loop do
+    prompt(question)
+    choice = gets.chomp.downcase
+    return choice if valid_answers.include?(choice)
+    prompt("Invalid option.")
+  end
 end
 
 def hit_or_stay
@@ -92,8 +110,8 @@ def hit_or_stay
   player_choice
 end
 
-def busted?(ttl)
-  ttl > BUST
+def busted?(sum)
+  sum > BUST
 end
 
 def detect_result(player_total, dealer_total)
@@ -122,29 +140,28 @@ def display_result(result)
 end
 
 def play_again?
-  answer = ''
-  loop do
-    prompt("Do you want to play again? (y/n)")
-    answer = gets.chomp.downcase
-    break if %w(y n).include?(answer)
-    prompt("Invalid option.")
-  end
-  answer == 'y'
+  choice = choose("Do you want to play again? (y/n)", ['y', 'n'])
+  choice == 'y'
 end
 
 loop do
   deck = initialize_deck
-  player_cards, dealer_cards = initialize_hands(deck)
-  display_partial_hands(player_cards, dealer_cards)
+  player_cards = []
+  dealer_cards = []
+  deal(deck, player_cards, 2)
+  deal(deck, dealer_cards, 2)
 
   # player turn
+  player_turn = true
+  display_hands(player_cards, dealer_cards, player_turn)
+
   player_choice = nil
   player_total = nil
   loop do
-    player_choice = hit_or_stay
+    player_choice = choose("(h)it or (s)tay?", ['h', 's'])
     if player_choice == 'h'
       deal(deck, player_cards)
-      display_partial_hands(player_cards, dealer_cards)
+      display_hands(player_cards, dealer_cards, player_turn)
     end
     player_total = total(player_cards)
     break if player_choice == 's' || busted?(player_total)
@@ -158,6 +175,7 @@ loop do
   end
 
   # dealer turn
+  player_turn = false
   dealer_total = nil
   loop do
     dealer_total = total(dealer_cards)
@@ -165,7 +183,7 @@ loop do
     prompt "Dealer hits"
     deal(deck, dealer_cards)
   end
-  display_full_hands(player_cards, dealer_cards)
+  display_hands(player_cards, dealer_cards, player_turn)
 
   if busted?(dealer_total)
     display_result(:dealer_busted)
