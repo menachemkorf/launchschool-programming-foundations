@@ -1,12 +1,8 @@
-VALUES = { 'J' => 'Jack',
-           'Q' => 'Queen',
-           'K' => 'King',
-           'A' => 'Ace' }.freeze
+SUITS = ['Hearts', 'Diamonds', 'Spades', 'Clubs'].freeze
 
-SUITS = { 'H' => 'Hearts',
-          'D' => 'Diamonds',
-          'S' => 'Spades',
-          'C' => 'Clubs' }.freeze
+VALUES = ['2', '3', '4', '5', '6', '7', '8', '9', '10',
+          'J', 'Q', 'K', 'A'].freeze
+
 BUST = 21
 DEALER_STAY = 17
 
@@ -15,7 +11,7 @@ def prompt(msg)
 end
 
 def initialize_deck
-  VALUES.keys.product(SUITS.keys).shuffle
+  VALUES.product(SUITS).shuffle
 end
 
 def initialize_hands(deck)
@@ -34,14 +30,7 @@ def format_cards(cards)
   cards.each do |card|
     value = card[0]
     suit = card[1]
-
-    full_value = if value.to_i == 0
-                   VALUES[value]
-                 else
-                   value
-                 end
-    full_suit = SUITS[suit]
-    formatted_cards.push("'#{full_value} of #{full_suit}'")
+    formatted_cards.push("'#{value} of #{suit}'")
   end
   formatted_cards.join(', ')
 end
