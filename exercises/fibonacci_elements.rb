@@ -21,7 +21,7 @@ def fibonacci?(num)
   fibonacci(0,1,num).include?(num)
 end
 
-def fibonacci_elements(arr)
+def fibonacci_indices(arr)
   selected_elements = []
   arr.each_with_index do |element, idx|
     selected_elements << element if fibonacci?(idx)
@@ -29,4 +29,9 @@ def fibonacci_elements(arr)
   selected_elements
 end
 
-p fibonacci_elements(('a'..'z').to_a)
+def fibonacci_values(numbers)
+  numbers.select { |num| fibonacci?(num) }
+end
+
+p fibonacci_indices(('a'..'z').to_a)
+p fibonacci_values((0..25).to_a)
