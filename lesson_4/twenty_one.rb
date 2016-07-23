@@ -40,7 +40,7 @@ def format_cards(cards)
   formatted_cards.join(', ')
 end
 
-def display_hand(name, cards, full)
+def display_hand(name, cards, full=true)
   if full
     visible_cards = cards
     total = " for a total of #{total(cards)}"
